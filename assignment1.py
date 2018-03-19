@@ -1,3 +1,9 @@
+# File name: assignment1.py
+# Author: Samuel Fatone, Ckyever Gaviola
+# Date created: 17/03/2018
+# Date last modified: 19/03/2018
+# Python Version: 3.6
+
 #Initialises the game board as a list
 gameboard = []
 
