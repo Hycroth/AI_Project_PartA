@@ -1,8 +1,8 @@
-# File name: assignment1.py
-# Author: Samuel Fatone, Ckyever Gaviola
-# Date created: 17/03/2018
-# Date last modified: 19/03/2018
-# Python Version: 3.6
+#File name: assignment1.py
+#Author: Samuel Fatone, Ckyever Gaviola
+#Date created: 17/03/2018
+#Date last modified: 19/03/2018
+#Python Version: 3.6
 
 #Initialises the game board as a list
 gameboard = []
@@ -29,11 +29,11 @@ for i in range(8):
 #Takes the user command, either 'Moves' or 'Massacre'
 command = str(input())
 
+#Sets the first icon to be counted as white, and the enemy as black
+player_icon = 'O'
+enemy_icon = '@'
+
 if command == "Moves":
-    
-    #Sets the first icon to be counted as white, and the enemy as black
-    player_icon = 'O'
-    enemy_icon = '@'
     
     #Will run through loop twice; once for each colour
     while(1):
@@ -85,3 +85,11 @@ if command == "Moves":
             enemy_icon = 'O'
         else:
             break
+
+elif command == "Massacre":
+    
+    #TODO: Construct search tree where nodes contain data structure indicating strength
+    #of move (i.e. no elim=0, single elim=1, double elim=2, etc) and the coordinates to 
+    #make move, for each piece? Use breadth-first search on this tree? Will require 
+    #creating functions that detect if a move results in a elimination(s).
+    
