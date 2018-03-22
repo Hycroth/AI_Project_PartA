@@ -1,9 +1,18 @@
 #File name: assignment1.py
 #Author: Samuel Fatone, Ckyever Gaviola
 #Date created: 17/03/2018
-#Date last modified: 19/03/2018
+#Date last modified: 22/03/2018
 #Python Version: 3.6
 
+#Constants
+BOARD_LENGTH = 8
+BOARD_WIDTH = 8
+TOP_BORDER = 0
+BOTTOM_BORDER = 7
+LEFT_BORDER = 0
+RIGHT_BORDER = 7
+
+#Returns coordinates [x1, y1, x2, y2] of the two closest white pieces to (i,j)
 def closest_pieces(i, j, gameboard):
     closest_piece = []
     depth = 1
@@ -23,22 +32,22 @@ gameboard = []
 
 #Reads through each line of input, and adds the characters to a separate list,
 #which is then added to the game board list
-for i in range(8):
-    oneline = []
-    line = str(input())
-    for j in range(0,15,2):
-        oneline.append(line[j])
-    gameboard.append(oneline)
-    oneline.clear
+#for i in range(BOARD_LENGTH):
+#    oneline = []
+#    line = str(input())
+#    for j in range(0,15,2):
+#        oneline.append(line[j])
+#    gameboard.append(oneline)
+#    oneline.clear
 
-#gameboard = [['X', '-', '-', '-', '-', '-', '-', 'X'], 
-#             ['-', '-', '-', '-', '-', '-', '-', '-'], 
-#             ['-', '-', '-', '-', '-', 'O', 'O', '-'], 
-#             ['-', '-', '-', '-', '@', 'O', '-', '-'], 
-#             ['-', '-', '-', '-', '-', '-', '-', '-'], 
-#             ['-', '-', '-', '-', '-', 'O', '-', '-'], 
-#             ['-', '-', '-', '-', '@', '-', '@', '@'], 
-#             ['X', '-', '-', '-', '-', '-', '-', 'X']]
+gameboard = [['X', '-', '-', '-', '-', '-', '-', 'X'], 
+             ['-', '-', '-', '-', '-', '-', '-', '-'], 
+             ['-', '-', '-', '-', '-', 'O', 'O', '-'], 
+             ['-', '-', '-', '-', '@', 'O', '-', '-'], 
+             ['-', '-', '-', '-', '-', '-', '-', '-'], 
+             ['-', '-', '-', '-', '-', 'O', '-', '-'], 
+             ['-', '-', '-', '-', '@', '-', '@', '@'], 
+             ['X', '-', '-', '-', '-', '-', '-', 'X']]
 
 #Takes the user command, either 'Moves' or 'Massacre'
 command = str(input())
@@ -54,39 +63,39 @@ if command == "Moves":
         tally = 0
         
         #Checks each square of the gameboard for the player icon
-        for i in range(8):
-            for j in range(8):
+        for i in range(BOARD_LENGTH):
+            for j in range(BOARD_WIDTH):
                 if gameboard[i][j] == player_icon:
                     #Can the piece move up?
-                    if (i!=0):
+                    if (i!=TOP_BORDER):
                         if (gameboard[i-1][j] == '-') :
                             tally += 1
                         #Can the piece move up by jumping?
-                        if i!=1 and (gameboard[i-1][j] == 'O' or gameboard[i-1][j] == '@'):
+                        if i!=TOP_BORDER+1 and (gameboard[i-1][j] == 'O' or gameboard[i-1][j] == '@'):
                             if (gameboard[i-2][j] == '-'):
                                 tally += 1
                     #Can the piece move down?
-                    if (i!=7):
+                    if (i!=BOTTOM_BORDER):
                         if (gameboard[i+1][j] == '-') :
                             tally += 1
                         #Can the piece move down by jumping?
-                        if i!=6 and (gameboard[i+1][j] == 'O' or gameboard[i+1][j] == '@'):
+                        if i!=BOTTOM_BORDER-1 and (gameboard[i+1][j] == 'O' or gameboard[i+1][j] == '@'):
                             if (gameboard[i+2][j] == '-'):
                                 tally += 1
                     #Can the piece move left?
-                    if (j!=0):
+                    if (j!=LEFT_BORDER):
                         if (gameboard[i][j-1] == '-') :
                             tally += 1
                         #Can the piece move left by jumping?
-                        if j!=1 and (gameboard[i][j-1] == 'O' or gameboard[i][j-1] == '@'):
+                        if j!=LEFT_BORDER+1 and (gameboard[i][j-1] == 'O' or gameboard[i][j-1] == '@'):
                             if (gameboard[i][j-2] == '-'):
                                 tally += 1
                     #Can the piece move right?
-                    if (j!=7):
+                    if (j!=RIGHT_BORDER):
                         if (gameboard[i][j+1] == '-') :
                             tally += 1
                         #Can the piece move right by jumping?
-                        if j!=6 and (gameboard[i][j+1] == 'O' or gameboard[i][j+1] == '@'):
+                        if j!=RIGHT_BORDER-1 and (gameboard[i][j+1] == 'O' or gameboard[i][j+1] == '@'):
                             if (gameboard[i][j+2] == '-'):
                                 tally += 1
                                 
@@ -99,3 +108,13 @@ if command == "Moves":
             enemy_icon = 'O'
         else:
             break
+        
+elif command == "Massacre":
+    
+    #Iterate through board finding all black pieces
+    for i in range(BOARD_LENGTH):
+        for j in range(BOARD_WIDTH):
+            #Found a black piece
+            if gameboard[i][j] == enemy_icon:
+                white_pieces = closest_pieces(i,j,gameboard)
+                print(white_pieces)
