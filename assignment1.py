@@ -4,6 +4,20 @@
 #Date last modified: 19/03/2018
 #Python Version: 3.6
 
+def closest_pieces(i, j, gameboard):
+    closest_piece = []
+    depth = 1
+    while (len(closest_piece) < 4):
+        for k in range(8):
+            for m in range(8):
+                if (abs(k-i) + abs(m-j) == depth):
+                    if (gameboard[k][m] == 'O'):
+                        closest_piece.append(k)
+                        closest_piece.append(m)
+                        if len(closest_piece) >=4:
+                            return closest_piece
+        depth += 1
+
 #Initialises the game board as a list
 gameboard = []
 
@@ -85,11 +99,3 @@ if command == "Moves":
             enemy_icon = 'O'
         else:
             break
-
-elif command == "Massacre":
-    
-    #TODO: Construct search tree where nodes contain data structure indicating strength
-    #of move (i.e. no elim=0, single elim=1, double elim=2, etc) and the coordinates to 
-    #make move, for each piece? Use breadth-first search on this tree? Will require 
-    #creating functions that detect if a move results in a elimination(s).
-    
