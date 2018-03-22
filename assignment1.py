@@ -1,3 +1,17 @@
+def closest_pieces(i, j, gameboard):
+    closest_piece = []
+    depth = 1
+    while (len(closest_piece) < 4):
+        for k in range(8):
+            for m in range(8):
+                if (abs(k-i) + abs(m-j) == depth):
+                    if (gameboard[k][m] == 'O'):
+                        closest_piece.append(k)
+                        closest_piece.append(m)
+                        if len(closest_piece) >=4:
+                            return closest_piece
+        depth += 1
+
 #Initialises the game board as a list
 gameboard = []
 
