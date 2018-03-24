@@ -1,7 +1,7 @@
 #File name: assignment1.py
 #Author: Samuel Fatone, Ckyever Gaviola
 #Date created: 17/03/2018
-#Date last modified: 22/03/2018
+#Date last modified: 23/03/2018
 #Python Version: 3.6
 
 #Constants
@@ -43,8 +43,8 @@ def is_legalsquare(i, j, gameboard):
         return False
     
 #Returns true if the current piece (i,j) is surrounded
-def is_eliminated(i,j,gameboard):
-    piece = gameboard[i][j]
+def is_eliminated(piece,gameboard):
+    piece = gameboard[Piece.icoord][Piece.jcoord]
     
     if (piece == 'O'):
         #Check elimination vertically
@@ -73,6 +73,28 @@ def is_eliminated(i,j,gameboard):
                 return True
     else:
         return False
+    
+#Recursive depth-limited search
+def DLS(node, depth, gameboard):
+    if (depth == 0 and is_eliminated(node.blackpiece,gameboard)):
+        return node
+    if depth > 0:
+        for child in node.children:
+            result = DLS(child, depth-1)
+            if (result != None):
+                return result
+    return None
+
+#Iterative deepening search
+def IDS(tree):
+    depth = 0
+    while(True):
+        result = DLS(tree.root, depth, gameboard)
+        if result != None:
+            return result
+        depth += 1
+        # Expand next layer of tree
+        tree.expand_tree
 
 class Piece:
     def __init__(self, icoord, jcoord, colour):
@@ -94,20 +116,9 @@ class Node:
 #Tree containing the possible sequence of moves to eliminate a black piece
 #using two white pieces
 class Tree:
-    def __init__(self, root):
-        self.nodes = []
+    def __init__(self, root=None):
         self.root = root
-        self.nodes.append(root)
-        
-    #def expand_tree(self):
-        # Make nodes for each move that "attack" the black piece
-        #for i in range(len(whitepieces)):
-            #Try move up
-            
-            #Try move down
-            #Try move left
-            #Try move right
-        
+        self.expand_tree        
 
 #Initialises the game board as a list
 gameboard = []
