@@ -12,6 +12,33 @@ BOTTOM_BORDER = 7
 LEFT_BORDER = 0
 RIGHT_BORDER = 7
 
+class Piece:
+    def __init__(self, icoord, jcoord, colour):
+        self.i = icoord         #Row number
+        self.j = jcoord         #Column number
+        self.colour = colour    #'@' or 'O'
+    
+#Node holding location of black piece and the two closest white pieces
+class Node:
+    def __init__(self, blackpiece, whitepiece1, whitepiece2, gameboard, move=None):      
+        self.bp = blackpiece
+        self.wp1 = whitepiece1
+        self.wp2 = whitepiece2
+        self.gameboard = gameboard
+        self.move = move            #String representing the move made
+        self.children = []
+        self.parent = None          #Allows us to traverse back up, to output move sequence
+        
+    def add_child(self, node):
+        self.children.append(node)
+        node.parent = self
+        
+#Tree containing the possible sequence of moves to eliminate a black piece
+#using two white pieces
+class Tree:
+    def __init__(self, root=None):
+        self.root = root
+
 #Returns coordinates [x1, y1, x2, y2] of the two closest white pieces to (i,j)
 def closest_pieces(i, j, gameboard):
     closest_piece = []
@@ -28,21 +55,22 @@ def closest_pieces(i, j, gameboard):
         depth += 1
         
 #Moves the white piece (i,j) to (k,m) and returns the new gameboard
+#Allows us to create several instances of the gameboard in the search tree
 def update_gameboard(i, j, k, m, gameboard):
     temp = gameboard
     temp[i][j] = '-'
     temp[k][m] = 'O'
     return temp
     
-#Returns true if moving piece a piece to (i,j) is legal
+#Returns true if moving a piece to (i,j) is legal
 def is_legalsquare(i, j, gameboard):
-    #Check square is empty, not a corner square and within boundaries of board
+    #Check square is empty (also not a corner square) and within boundaries of board
     if (TOP_BORDER <= i <= BOTTOM_BORDER and LEFT_BORDER <= j <= RIGHT_BORDER and gameboard[i][j] == '-'):
         return True
     else:
         return False
     
-#Returns true if the current piece (i,j) is surrounded
+#Returns true if the current piece is surrounded
 def is_eliminated(piece,gameboard):
     piece = gameboard[Piece.icoord][Piece.jcoord]
     
@@ -76,7 +104,7 @@ def is_eliminated(piece,gameboard):
     
 #Recursive depth-limited search
 def DLS(node, depth, gameboard):
-    if (depth == 0 and is_eliminated(node.blackpiece,gameboard)):
+    if (depth == 0 and is_eliminated(node.bp,gameboard)):
         return node
     if depth > 0:
         for child in node.children:
@@ -92,33 +120,7 @@ def IDS(tree):
         result = DLS(tree.root, depth, gameboard)
         if result != None:
             return result
-        depth += 1
-        # Expand next layer of tree
-        tree.expand_tree
-
-class Piece:
-    def __init__(self, icoord, jcoord, colour):
-        self.icoord = icoord    #Row number
-        self.jcoord = jcoord    #Column number
-        self.colour = colour
-    
-#Node holding location of black piece and the two closest white pieces
-class Node:
-    def __init__(self, blackpiece, whitepiece1, whitepiece2):
-        self.blackpiece = blackpiece
-        self.whitepiece1 = whitepiece1
-        self.whitepiece2 = whitepiece2
-        self.children = []
-        
-    def add_child(self, node):
-        self.children.append(node)
-        
-#Tree containing the possible sequence of moves to eliminate a black piece
-#using two white pieces
-class Tree:
-    def __init__(self, root=None):
-        self.root = root
-        self.expand_tree        
+        depth += 1     
 
 #Initialises the game board as a list
 gameboard = []
@@ -133,7 +135,7 @@ gameboard = []
 #    gameboard.append(oneline)
 #    oneline.clear
 
-#Figure 2
+#Figure 2 for Moves
 #gameboard = [['X', '-', '-', '-', '-', '-', '-', 'X'], 
 #             ['-', '-', '-', '-', '-', '-', '-', '-'], 
 #             ['-', '-', '-', '-', '-', 'O', 'O', '-'], 
@@ -143,7 +145,7 @@ gameboard = []
 #             ['-', '-', '-', '-', '@', '-', '@', '@'], 
 #             ['X', '-', '-', '-', '-', '-', '-', 'X']]
 
-#Figure 3
+#Figure 3 for Massacre
 gameboard = [['X', '-', '-', '-', '-', '-', '-', 'X'], 
              ['-', '-', '-', '-', '-', '-', '-', '-'], 
              ['-', '-', '-', '-', '-', 'O', '-', '-'], 
@@ -220,9 +222,9 @@ elif command == "Massacre":
         for j in range(BOARD_WIDTH):
             #Found a black piece
             if gameboard[i][j] == enemy_icon:
-                black_piece = Piece(i,j,enemy_icon)
+                bp = Piece(i,j,enemy_icon)
+                #Find the two closest white pieces
                 white_pieces = closest_pieces(i,j,gameboard)
-                white1 = Piece(white_pieces[0], white_pieces[1], player_icon)
-                white2 = Piece(white_pieces[2], white_pieces[3], player_icon)                
-                #Create search tree of possible moves for two closest white pieces
-                #Each move must bring it closer or remain the same distance to black piece
+                wp1 = Piece(white_pieces[0], white_pieces[1], player_icon)
+                wp2 = Piece(white_pieces[2], white_pieces[3], player_icon) 
+                
