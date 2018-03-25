@@ -25,7 +25,6 @@ class Piece:
         self.i = icoord             #Row number
         self.j = jcoord             #Column number
         self.colour = colour        #'@' or 'O'
-        self.eliminate = eliminate  #Has this piece been eliminated
         
 class Gameboard:
     def __init__(self,gameboard):
@@ -35,11 +34,11 @@ class Gameboard:
     def in_board(self,i,j):
         return (TOP_BORDER <= i <= BOTTOM_BORDER) and (LEFT_BORDER <= j <= RIGHT_BORDER)
             
-    #Returns true if coordinates is empty and not a corner square
+    #Returns true if coordinates are empty and not a corner square
     def is_empty(self,i,j):
         return self.in_board(i,j) and (self.board[i][j] == EMPTY)
     
-    #Returns true if coordinates contain either players piece
+    #Returns true if coordinates contain a player piece
     def is_piece(self,i,j):
         return self.in_board(i,j) and (self.board[i][j] == BLACK or self.board[i][j] == WHITE)
     
@@ -52,11 +51,11 @@ class Gameboard:
         #Check surroundings of where the new piece has moved for eliminations
         if newboard.is_elim(i-1,j):         #Square above
             newboard.board[i-1][j] = EMPTY
-        elif newboard.is_elim(i+1,j):       #Square below
+        if newboard.is_elim(i+1,j):       #Square below
             newboard.board[i+1][j] = EMPTY
-        elif newboard.is_elim(i,j-1):       #Square on left
+        if newboard.is_elim(i,j-1):       #Square on left
             newboard.board[i][j-1] = EMPTY
-        elif newboard.is_elim(i,j+1):       #Square on right
+        if newboard.is_elim(i,j+1):       #Square on right
             newboard.board[i][j+1] = EMPTY
         #Now check if current piece has been eliminated
         if newboard.is_elim(i,j):
