@@ -4,6 +4,9 @@
 #Date last modified: 25/03/2018
 #Python Version: 3.6
 
+#Debug
+import pdb
+
 #Constants
 BOARD_LENGTH = 8
 BOARD_WIDTH = 8
@@ -44,18 +47,21 @@ class Gameboard:
     
     #Moves piece (i,j) to (k,m), checks for eliminations, then returns updated board
     def update_board(self,i,j,k,m):
-        newboard = self
+        ###############
+        pdb.set_trace()
+        ###############
+        newboard = Gameboard(self.board)
         temp = newboard.board[i][j]
         newboard.board[i][j] = EMPTY
         newboard.board[k][m] = temp
         #Check surroundings of where the new piece has moved for eliminations
         if newboard.is_elim(i-1,j):         #Square above
             newboard.board[i-1][j] = EMPTY
-        if newboard.is_elim(i+1,j):       #Square below
+        if newboard.is_elim(i+1,j):         #Square below
             newboard.board[i+1][j] = EMPTY
-        if newboard.is_elim(i,j-1):       #Square on left
+        if newboard.is_elim(i,j-1):         #Square on left
             newboard.board[i][j-1] = EMPTY
-        if newboard.is_elim(i,j+1):       #Square on right
+        if newboard.is_elim(i,j+1):         #Square on right
             newboard.board[i][j+1] = EMPTY
         #Now check if current piece has been eliminated
         if newboard.is_elim(i,j):
@@ -66,7 +72,7 @@ class Gameboard:
     def is_elim(self,i,j):
         if not self.is_piece(i,j):
             return False
-        
+        #Identify the enemy colour
         piece = self.board[i][j]
         if (piece == BLACK):
             enemy = WHITE
@@ -79,13 +85,13 @@ class Gameboard:
             if ((top_piece == enemy or top_piece == CORNER) and (bot_piece == enemy or bot_piece == CORNER)):
                 return True
         #Check if surrounded horizontally
-        elif ((j-1)>=LEFT_BORDER and (j+1)<=RIGHT_BORDER): #Prevents IndexError
+        if ((j-1)>=LEFT_BORDER and (j+1)<=RIGHT_BORDER):
             left_piece = self.board[i][j-1]
             right_piece = self.board[i][j+1]
             if ((left_piece == enemy or left_piece == CORNER) and (right_piece == enemy or right_piece == CORNER)):
                 return True
-        else:
-            return False
+        
+        return False
     
     #Returns updated board if move is possible and None otherwise
     def move(self,i,j,direction,jump):
@@ -111,8 +117,8 @@ class Gameboard:
                     return self.update_board(i,j,i,j+2)
                 elif self.is_empty(i,j+1):
                     return self.update_board(i,j,i,j+1)
-        else:
-            return None
+        
+        return None
         
 #Node
 class Node:
@@ -135,10 +141,10 @@ class Node:
         if self.parent == None:
             return None
         #Whitepiece1 was moved
-        elif (self.wp1.i != self.parent.wp1.i) and (self.wp1.j != self.parent.wp1.j):
+        elif (self.wp1.i != self.parent.wp1.i) or (self.wp1.j != self.parent.wp1.j):
             return [self.parent.wp1.i,self.parent.wp1.j,self.wp1.i,self.wp1.j]
         #Whitepiece2 was moved
-        elif (self.wp2.i != self.parent.wp2.i) and (self.wp2.j != self.parent.wp2.j):
+        elif (self.wp2.i != self.parent.wp2.i) or (self.wp2.j != self.parent.wp2.j):
             return [self.parent.wp2.i,self.parent.wp2.j,self.wp2.i,self.wp2.j]
             
 #Tree
@@ -158,78 +164,78 @@ class Tree:
         return leaf_nodes
     
     #Expands the tree by depth 1
-    def expand(self):
+    def expand(self):        
         leaves = self.find_leaves(self.root)
         
         #For each leaf node, attempt to create children with possible moves
-        #Node will not be added if move results in whitepiece being eliminated
+        #Node will not be added if move results in a whitepiece being eliminated
         for node in leaves:
             wp1 = node.wp1
             wp2 = node.wp2
             # Move whitepiece1 up?
-            board = node.board.move(wp1.i,wp1.j,UP,False)
-            if board != None and gameboard.board[node.wp1.i][node.wp1.j] != EMPTY:
-                node.add_child(Node(node.bp,Piece(i-1,j,WHITE),node.wp2,board))
+            newboard = node.board.move(wp1.i,wp1.j,UP,False)
+            if newboard != None and newboard.board[node.wp1.i-1][node.wp1.j] != EMPTY:
+                node.add_child(Node(node.bp,Piece(i-1,j,WHITE),node.wp2,newboard))
             # Jump whitepiece1 up?
-            board = node.board.move(wp1.i,wp1.j,UP,True)
-            if board != None and gameboard.board[node.wp1.i][node.wp1.j] != EMPTY:
-                node.add_child(Node(node.bp,Piece(i-2,j,WHITE),node.wp2,board))
+            newboard = node.board.move(wp1.i,wp1.j,UP,True)
+            if newboard != None and newboard.board[node.wp1.i-2][node.wp1.j] != EMPTY:
+                node.add_child(Node(node.bp,Piece(i-2,j,WHITE),node.wp2,newboard))
             # Move whitepiece1 down?
-            board = node.board.move(wp1.i,wp1.j,DOWN,False)
-            if board != None and gameboard.board[node.wp1.i][node.wp1.j] != EMPTY:
-                node.add_child(Node(node.bp,Piece(i+1,j,WHITE),node.wp2,board))
+            newboard = node.board.move(wp1.i,wp1.j,DOWN,False)
+            if newboard != None and gameboard.board[node.wp1.i+1][node.wp1.j] != EMPTY:
+                node.add_child(Node(node.bp,Piece(i+1,j,WHITE),node.wp2,newboard))
             # Jump whitepiece1 down?
-            board = node.board.move(wp1.i,wp1.j,DOWN,True)
-            if board != None and gameboard.board[node.wp1.i][node.wp1.j] != EMPTY:
-                node.add_child(Node(node.bp,Piece(i+2,j,WHITE),node.wp2,board))
+            newboard = node.board.move(wp1.i,wp1.j,DOWN,True)
+            if newboard != None and newboard.board[node.wp1.i+2][node.wp1.j] != EMPTY:
+                node.add_child(Node(node.bp,Piece(i+2,j,WHITE),node.wp2,newboard))
             # Move whitepiece1 left?
-            board = node.board.move(wp1.i,wp1.j,LEFT,False)
-            if board != None and gameboard.board[node.wp1.i][node.wp1.j] != EMPTY:
-                node.add_child(Node(node.bp,Piece(i,j-1,WHITE),node.wp2,board))
+            newboard = node.board.move(wp1.i,wp1.j,LEFT,False)
+            if newboard != None and newboard.board[node.wp1.i][node.wp1.j-1] != EMPTY:
+                node.add_child(Node(node.bp,Piece(i,j-1,WHITE),node.wp2,newboard))
             # Jump whitepiece1 left?
-            board = node.board.move(wp1.i,wp1.j,LEFT,True)
-            if board != None and gameboard.board[node.wp1.i][node.wp1.j] != EMPTY:
-                node.add_child(Node(node.bp,Piece(i,j-1,WHITE),node.wp2,board))
+            newboard = node.board.move(wp1.i,wp1.j,LEFT,True)
+            if newboard != None and newboard.board[node.wp1.i][node.wp1.j-2] != EMPTY:
+                node.add_child(Node(node.bp,Piece(i,j-2,WHITE),node.wp2,newboard))
             # Move whitepiece1 right?
-            board = node.board.move(wp1.i,wp1.j,RIGHT,False)
-            if board != None and gameboard.board[node.wp1.i][node.wp1.j] != EMPTY:
-                node.add_child(Node(node.bp,Piece(i,j+1,WHITE),node.wp2,board))
+            newboard = node.board.move(wp1.i,wp1.j,RIGHT,False)
+            if newboard != None and newboard.board[node.wp1.i][node.wp1.j+1] != EMPTY:
+                node.add_child(Node(node.bp,Piece(i,j+1,WHITE),node.wp2,newboard))
             # Jump whitepiece1 right?
-            board = node.board.move(wp1.i,wp1.j,RIGHT,True)
-            if board != None and gameboard.board[node.wp1.i][node.wp1.j] != EMPTY:
-                node.add_child(Node(node.bp,Piece(i,j+1,WHITE),node.wp2,board))
+            newboard = node.board.move(wp1.i,wp1.j,RIGHT,True)
+            if newboard != None and newboard.board[node.wp1.i][node.wp1.j+2] != EMPTY:
+                node.add_child(Node(node.bp,Piece(i,j+2,WHITE),node.wp2,newboard))
             # Move whitepiece2 up?
-            board = node.board.move(wp2.i,wp2.j,UP,False)
-            if board != None and gameboard.board[node.wp2.i][node.wp2.j] != EMPTY:
-                node.add_child(Node(node.bp,node.wp1,Piece(i-1,j,WHITE),board))
+            newboard = node.board.move(wp2.i,wp2.j,UP,False)
+            if newboard != None and newboard.board[node.wp2.i-1][node.wp2.j] != EMPTY:
+                node.add_child(Node(node.bp,node.wp1,Piece(i-1,j,WHITE),newboard))
             # Jump whitepiece2 up?
-            board = node.board.move(wp2.i,wp2.j,UP,True)
-            if board != None and gameboard.board[node.wp2.i][node.wp2.j] != EMPTY:
-                node.add_child(Node(node.bp,node.wp1,Piece(i-2,j,WHITE),board))
+            newboard = node.board.move(wp2.i,wp2.j,UP,True)
+            if newboard != None and newboard.board[node.wp2.i-2][node.wp2.j] != EMPTY:
+                node.add_child(Node(node.bp,node.wp1,Piece(i-2,j,WHITE),newboard))
             # Move whitepiece2 down?
-            board = node.board.move(wp2.i,wp2.j,DOWN,False)
-            if board != None and gameboard.board[node.wp2.i][node.wp2.j] != EMPTY:
-                node.add_child(Node(node.bp,node.wp1,Piece(i+1,j,WHITE),board))
+            newboard = node.board.move(wp2.i,wp2.j,DOWN,False)
+            if newboard != None and newboard.board[node.wp2.i+1][node.wp2.j] != EMPTY:
+                node.add_child(Node(node.bp,node.wp1,Piece(i+1,j,WHITE),newboard))
             # Jump whitepiece2 down?
-            board = node.board.move(wp2.i,wp2.j,DOWN,True)
-            if board != None and gameboard.board[node.wp2.i][node.wp2.j] != EMPTY:
-                node.add_child(Node(node.bp,node.wp1,Piece(i+2,j,WHITE),board))
+            newboard = node.board.move(wp2.i,wp2.j,DOWN,True)
+            if newboard != None and newboard.board[node.wp2.i+2][node.wp2.j] != EMPTY:
+                node.add_child(Node(node.bp,node.wp1,Piece(i+2,j,WHITE),newboard))
             # Move whitepiece2 left?
-            board = node.board.move(wp2.i,wp2.j,LEFT,False)
-            if board != None and gameboard.board[node.wp2.i][node.wp2.j] != EMPTY:
-                node.add_child(Node(node.bp,node.wp1,Piece(i,j-1,WHITE),board))
+            newboard = node.board.move(wp2.i,wp2.j,LEFT,False)
+            if newboard != None and newboard.board[node.wp2.i][node.wp2.j-1] != EMPTY:
+                node.add_child(Node(node.bp,node.wp1,Piece(i,j-1,WHITE),newboard))
             # Jump whitepiece2 left?
-            board = node.board.move(wp2.i,wp2.j,LEFT,True)
-            if board != None and gameboard.board[node.wp2.i][node.wp2.j] != EMPTY:
-                node.add_child(Node(node.bp,node.wp1,Piece(i,j-1,WHITE),board))
+            newboard = node.board.move(wp2.i,wp2.j,LEFT,True)
+            if newboard != None and newboard.board[node.wp2.i][node.wp2.j-2] != EMPTY:
+                node.add_child(Node(node.bp,node.wp1,Piece(i,j-2,WHITE),newboard))
             # Move whitepiece2 right?
-            board = node.board.move(wp2.i,wp2.j,RIGHT,False)
-            if board != None and gameboard.board[node.wp2.i][node.wp2.j] != EMPTY:
-                node.add_child(Node(node.bp,node.wp1,Piece(i,j+1,WHITE),board))
+            newboard = node.board.move(wp2.i,wp2.j,RIGHT,False)
+            if newboard != None and newboard.board[node.wp2.i][node.wp2.j+1] != EMPTY:
+                node.add_child(Node(node.bp,node.wp1,Piece(i,j+1,WHITE),newboard))
             # Jump whitepiece2 right?
-            board = node.board.move(wp2.i,wp2.j,RIGHT,True)
-            if board != None and gameboard.board[node.wp2.i][node.wp2.j] != EMPTY:
-                node.add_child(Node(node.bp,node.wp1,Piece(i,j+1,WHITE),board))
+            newboard = node.board.move(wp2.i,wp2.j,RIGHT,True)
+            if newboard != None and newboard.board[node.wp2.i][node.wp2.j+2] != EMPTY:
+                node.add_child(Node(node.bp,node.wp1,Piece(i,j+2,WHITE),newboard))
     
 #Recursive depth-limited search
 def DLS(node, depth, gameboard):
@@ -238,7 +244,7 @@ def DLS(node, depth, gameboard):
         return node
     if depth > 0:
         for child in node.children:
-            result = DLS(child, depth-1)
+            result = DLS(child, depth-1,child.board)
             if (result != None):
                 return result
     return None
@@ -363,23 +369,24 @@ if command == "Moves":
             break
         
 elif command == "Massacre":  
+    
     #To utilise the Gameboard methods
-    gameboard = Gameboard(gameboard)
+    thegameboard = Gameboard(gameboard)
     
     #Iterate through board finding all black pieces
     for i in range(BOARD_LENGTH):
         for j in range(BOARD_WIDTH):
             #Found black piece
-            if gameboard.board[i][j] == BLACK:
+            if thegameboard.board[i][j] == BLACK:
                 bp = Piece(i,j,BLACK)
                 #Find the two closest white pieces
-                closewhites = closest_pieces(i, j, gameboard.board)
+                closewhites = closest_pieces(i, j, thegameboard.board)
                 wp1 = Piece(closewhites[0],closewhites[1],WHITE)
                 wp2 = Piece(closewhites[2],closewhites[3],WHITE)
                 #Initialise search tree for possible moves
-                tree = Tree(Node(bp,wp1,wp2,gameboard))
+                tree = Tree(Node(bp,wp1,wp2,thegameboard))
                 #Find the final move node
-                node = IDS(tree,gameboard)
+                node = IDS(tree,thegameboard)
                 #Traverse back up from the goal node and record each move
                 moves = []
                 while(True):
@@ -389,4 +396,5 @@ elif command == "Massacre":
                     if node == None:
                         break
                 #Print in reverse order since traversal started from last move
+                #TODO: output with correct formatting
                 print(moves.reverse())
