@@ -5,7 +5,8 @@
 #Python Version: 3.6
 
 #Debug
-import pdb
+#import pdb
+
 import copy
 
 #Constants
@@ -169,8 +170,6 @@ class Tree:
         
         #For each leaf node, attempt to create children with possible moves
         #Node will not be added if move results in a whitepiece being eliminated
-        
-        #BUG: need to pass board as list not the actual reference to board
         for node in leaves:
             
             wp1 = copy.deepcopy(node.wp1)
@@ -282,7 +281,6 @@ def closest_pieces(i, j, gameboard):
         
 #Prints moves in the correct format
 def print_moves(movelist):
-    #pdb.set_trace()### DEBUG
     movelist.reverse()
     for move in movelist:
         print('({}, {}) -> ({}, {})'.format(move[1],move[0],move[3],move[2]))
@@ -306,7 +304,7 @@ gameboard = []
 #             ['-', '-', '-', '-', '-', 'O', 'O', '-'], 
 #             ['-', '-', '-', '-', '@', 'O', '-', '-'], 
 #             ['-', '-', '-', '-', '-', '-', '-', '-'], 
-#             ['-', '-', '-', '-', '-', 'O', '-', '-'], 
+#            ['-', '-', '-', '-', '-', 'O', '-', '-'], 
 #             ['-', '-', '-', '-', '@', '-', '@', '@'], 
 #             ['X', '-', '-', '-', '-', '-', '-', 'X']]
 
@@ -399,6 +397,8 @@ elif command == "Massacre":
                 tree = Tree(Node(bp,wp1,wp2,thegameboard))
                 #Find the final move node
                 node = IDS(tree,thegameboard)
+                #Update the gameboard
+                thegameboard = node.board
                 #Traverse back up from the goal node and record each move
                 moves = []
                 while(True):
@@ -410,5 +410,4 @@ elif command == "Massacre":
                     node = node.parent
                     
                 #Print in reverse order since traversal started from last move
-                #TODO: output with correct formatting
                 print_moves(moves)
