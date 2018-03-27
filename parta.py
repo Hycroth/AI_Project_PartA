@@ -331,13 +331,13 @@ gameboard = []
 
 # Reads through each line of input, and adds the characters to a separate list,
 # which is then added to the game board list
-#for i in range(BOARD_LENGTH):
-#    oneline = []
-#    line = str(input())
-#    for j in range(0,15,2):
-#        oneline.append(line[j])
-#    gameboard.append(oneline)
-#    oneline.clear
+for i in range(BOARD_LENGTH):
+    oneline = []
+    line = str(input())
+    for j in range(0,15,2):
+        oneline.append(line[j])
+    gameboard.append(oneline)
+    oneline.clear
 
 # Figure 2 for Moves
 #gameboard = [['X', '-', '-', '-', '-', '-', '-', 'X'], 
@@ -350,14 +350,14 @@ gameboard = []
 #             ['X', '-', '-', '-', '-', '-', '-', 'X']]
 
 # Figure 3 for Massacre
-gameboard = [['X', '-', '-', '-', '-', '-', '-', 'X'], 
-             ['-', '-', '-', '-', '-', '-', '-', '-'], 
-             ['-', '-', '-', '-', '-', 'O', '-', '-'], 
-             ['-', '-', '-', '-', '@', 'O', '-', '-'], 
-             ['-', '-', '-', '-', '-', '-', 'O', '-'], 
-             ['-', '-', '-', '-', '-', 'O', '@', '-'], 
-             ['-', '-', '-', '-', '-', '-', '-', '@'], 
-             ['X', '-', '-', '-', '-', '-', '-', 'X']]
+#gameboard = [['X', '-', '-', '-', '-', '-', '-', 'X'], 
+#             ['-', '-', '-', '-', '-', '-', '-', '-'], 
+#             ['-', '-', '-', '-', '-', 'O', '-', '-'], 
+#             ['-', '-', '-', '-', '@', 'O', '-', '-'], 
+#             ['-', '-', '-', '-', '-', '-', 'O', '-'], 
+#             ['-', '-', '-', '-', '-', 'O', '@', '-'], 
+#             ['-', '-', '-', '-', '-', '-', '-', '@'], 
+#             ['X', '-', '-', '-', '-', '-', '-', 'X']]
 
 # Takes the user command, either 'Moves' or 'Massacre'
 command = str(input())
