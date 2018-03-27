@@ -1,0 +1,2 @@
+Comments
+* Massacre function does not always return the shortest number of moves since it eliminates the black pieces in only one order starting from the top left corner and working its way to the bottom right corner.
