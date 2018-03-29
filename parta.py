@@ -326,6 +326,9 @@ def print_moves(movelist):
     for move in movelist:
         print('({}, {}) -> ({}, {})'.format(move[1],move[0],move[3],move[2]))
 
+
+########## START OF MAIN PROGRAM ##########
+
 # Initialises the game board as a list
 gameboard = []
 
@@ -334,7 +337,7 @@ gameboard = []
 for i in range(BOARD_LENGTH):
     oneline = []
     line = str(input())
-    for j in range(0,15,2):
+    for j in range(0, 15, 2):
         oneline.append(line[j])
     gameboard.append(oneline)
     oneline.clear
