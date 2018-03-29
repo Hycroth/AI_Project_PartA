@@ -1,7 +1,7 @@
-# File name: assignment1.py
+# File name: parta.py
 # Author: Samuel Fatone, Ckyever Gaviola
 # Date created: 17/03/2018
-# Date last modified: 27/03/2018
+# Date last modified: 29/03/2018
 # Python Version: 3.6
 
 import copy
@@ -338,26 +338,6 @@ for i in range(BOARD_LENGTH):
         oneline.append(line[j])
     gameboard.append(oneline)
     oneline.clear
-
-# Figure 2 for Moves
-#gameboard = [['X', '-', '-', '-', '-', '-', '-', 'X'], 
-#             ['-', '-', '-', '-', '-', '-', '-', '-'], 
-#             ['-', '-', '-', '-', '-', 'O', 'O', '-'], 
-#             ['-', '-', '-', '-', '@', 'O', '-', '-'], 
-#             ['-', '-', '-', '-', '-', '-', '-', '-'], 
-#             ['-', '-', '-', '-', '-', 'O', '-', '-'], 
-#             ['-', '-', '-', '-', '@', '-', '@', '@'], 
-#             ['X', '-', '-', '-', '-', '-', '-', 'X']]
-
-# Figure 3 for Massacre
-#gameboard = [['X', '-', '-', '-', '-', '-', '-', 'X'], 
-#             ['-', '-', '-', '-', '-', '-', '-', '-'], 
-#             ['-', '-', '-', '-', '-', 'O', '-', '-'], 
-#             ['-', '-', '-', '-', '@', 'O', '-', '-'], 
-#             ['-', '-', '-', '-', '-', '-', 'O', '-'], 
-#             ['-', '-', '-', '-', '-', 'O', '@', '-'], 
-#             ['-', '-', '-', '-', '-', '-', '-', '@'], 
-#             ['X', '-', '-', '-', '-', '-', '-', 'X']]
 
 # Takes the user command, either 'Moves' or 'Massacre'
 command = str(input())

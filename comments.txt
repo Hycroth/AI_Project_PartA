@@ -9,6 +9,7 @@ At first, the game board (which is stored as a list of lists) is searched to fin
 The time complexity of the moves feature would be O(n^2), as the algorithm has to search through a nested loop in order to find out the amount of moves available. As no data besides the moves counts is actually being stored, the space complexity of the moves feature would be constant.
 
 Massacre:
+
 We have modelled the massacre feature as a search problem by having the initial state represented by the initial gameboard, actions as moving a piece, goal test is eliminating a black piece, and the path cost is the number of moves it took. We have also decided to split the main goal of having all black pieces eliminated into eliminating the black pieces one by one, allowing us to simplify the problem. The aim is to eliminate each of these black pieces by finding the two closest white pieces using the sequence of moves with the smallest path cost.
 
 The search algorithm being used here is iterative deepening and in this case has a maximum branching factor of 16 as there are 16 possible moves to be made at each state (2 white pieces moving/jumping: up, down, left, right). Maximum search depth is not known since in the event of an unkillable black piece this will result in a loop, especially since there is no repeated-state checking implemented. We have also decided to only expand the search tree whenever the depth limit is increased in order to reduce run time and memory space.
