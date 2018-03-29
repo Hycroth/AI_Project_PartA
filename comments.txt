@@ -1,5 +1,13 @@
 Comments
 
+Moves:
+
+The moves feature has been modelled using the initial game board, which is given at the start of the problem. For this part, the pieces do not have to move (i.e. the game board never changes), the move counts for each colour just have to be calculated.
+
+At first, the game board (which is stored as a list of lists) is searched to find all white pieces. When a white piece is encountered, the algorithm finds out whether the piece can move up, down, left or right, as well as if it is able to jump over another piece. This process continues until all of the pieces have been found and their move count calculated. The same process is then conducted for the black pieces.
+
+The time complexity of the moves feature would be O(n^2), as the algorithm has to search through a nested loop in order to find out the amount of moves available. As no data besides the moves counts is actually being stored, the space complexity of the moves feature would be constant.
+
 Massacre:
 We have modelled the massacre feature as a search problem by having the initial state represented by the initial gameboard, actions as moving a piece, goal test is eliminating a black piece, and the path cost is the number of moves it took. We have also decided to split the main goal of having all black pieces eliminated into eliminating the black pieces one by one, allowing us to simplify the problem. The aim is to eliminate each of these black pieces by finding the two closest white pieces using the sequence of moves with the smallest path cost.
 
