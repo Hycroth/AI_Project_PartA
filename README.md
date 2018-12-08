@@ -1,2 +1,2 @@
-# COMP30024_Project_PartA
+# COMP30024 Project Part A
 Sem 1 2018
